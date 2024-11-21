@@ -1,0 +1,141 @@
+type Query {
+  getAccount(id: ID!): Account
+  getTransaction(id: ID!): Transaction
+  getAccountTransactions(
+    accountId: ID!
+   """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+  ): TransactionConnection
+}
+
+# Pagination Types
+"""A connection to a list of items."""
+type TransactionConnection{
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [TransactionEdge]
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""An edge in a connection."""
+type TransactionEdge {
+  """The item at the end of the edge"""
+  node: Transaction 
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+# Data Types
+type Account implements Node{
+  id: ID!
+  name: String!
+  balance: String!
+  transactions: [ID!]
+  createdAt: String
+}
+
+type Transaction implements Node{
+  id: ID!
+  sender: ID!
+  receiver: ID!
+  amount: String!
+  createdAt: String
+}
+
+type Mutation {
+  createAccount(input: createAccountInput!): newAccountPayload
+  deleteAccount(id: ID!): deleteAccountPayload
+  updateAccount(input: updateAccountInput!): updatedAccountPayload
+  createTransaction(input: createTransactionInput!): newTransactionPayload
+  updateTransaction(input: updateTransactionInput!): updatedTransactionPayload
+  deleteTransaction(id: ID!): Boolean!
+}
+
+# Input Types
+input createTransactionInput {
+    senderId: ID!
+    receiverId: ID!
+    amount: String!
+    clientMutationId: String
+}
+
+input createAccountInput {
+    name: String!
+    initialDeposit: String!
+    clientMutationId: String
+}
+
+input updateAccountInput {
+    id: ID!
+    balance: String!
+    clientMutationId: String
+}
+
+input updateTransactionInput {
+    id: ID!
+    amount: String!
+    clientMutationId: String
+}
+
+# type Subscription {
+# createdTransaction(input: createdTransactionInput!): changedTransactionPayload
+#  updatedTransaction(input: updatedTransactionInput!): changedTransactionPayload
+#  deletedTransaction(input: deletedTransactionInput!): changedTransactionPayload
+#}
+
+# Payloads
+type newAccountPayload {
+  account: Account
+  clientMutationId: String
+}
+
+type newTransactionPayload {
+  transaction: Transaction
+  clientMutationId: String
+}
+
+type updatedAccountPayload {
+  account: Account
+  clientMutationId: String
+}
+
+type deletedAccountPayload {
+  success: Boolean!
+  clientMutationId: String
+}
+# type changedTransactionPayload {
+# transaction: Transaction
+#  clientSubscriptionId: String
+#}
