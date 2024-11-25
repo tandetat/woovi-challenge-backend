@@ -31,13 +31,13 @@ const AccountType = new GraphQLObjectType<IAccount>({
 	interfaces: () => [nodeInterface],
 });
 
-const AccountInputType = new GraphQLInputObjectType({
-	name: 'AccountInput',
-	fields: {
-		id: { type: new GraphQLNonNull(GraphQLID) },
-	},
-});
+//const AccountInputType = new GraphQLInputObjectType({
+//	name: 'AccountInput',
+//	fields: {
+//		id: { type: new GraphQLNonNull(GraphQLID) },
+//	},
+//});
 
 registerTypeLoader(AccountType, AccountLoader.load);
 
-export { AccountType, AccountInputType };
+export { AccountType };

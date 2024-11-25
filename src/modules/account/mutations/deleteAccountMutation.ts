@@ -16,7 +16,7 @@ const _deleteAccountMutation = mutationWithClientMutationId({
 		},
 	},
 	mutateAndGetPayload: async (args: deleteAccountInput) => {
-		const account = await Account.findByIdAndDelete(args.id);
+		const account = await Account.findByIdAndDelete(args.id).exec();
 
 		//redisPubSub.publish(PUB_SUB_EVENTS.MESSAGE.ADDED, {
 		//	message: message._id.toString(),
