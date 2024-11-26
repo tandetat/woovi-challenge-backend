@@ -1,6 +1,5 @@
 import { AccountType } from './AccountType';
 import { AccountLoader } from './AccountLoader';
-import { GraphQLID, GraphQLNonNull } from 'graphql';
 
 export const accountField = (key: string) => ({
 	[key]: {

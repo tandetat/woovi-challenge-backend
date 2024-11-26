@@ -8,21 +8,12 @@ export type getAccountInput = {
 	id: string;
 };
 
-const _getAccountQuery = {
+export const getAccountQuery = {
 	type: AccountType,
 	args: {
-		name: { type: new GraphQLNonNull(GraphQLString) },
+		id: { type: new GraphQLNonNull(GraphQLID) },
 	},
-	resolve: async (_, args, context) => {
+	resolve: async (_, args, context) => AccountLoader.load(context, args.id),
 
-		const account = await Account.findOne({ name: args.name }).exec();
-		if (account === null || account === undefined) {
-			throw Error(`account not found for id ${args.name}`)
-		}
-		console.log(account.get('balance'));
-		AccountLoader.load(context, account._id as string);
-	}
 };
-export const getAccountQuery = {
-	..._getAccountQuery,
-};
+

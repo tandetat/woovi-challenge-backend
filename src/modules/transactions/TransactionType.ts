@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 import { globalIdField, connectionDefinitions } from 'graphql-relay';
 import { ITransaction } from './TransactionModel';
 import { nodeInterface } from '../node/typeRegister';
@@ -15,11 +15,11 @@ const TransactionType = new GraphQLObjectType<ITransaction>({
 			resolve: (transaction) => transaction.amount,
 		},
 		sender: {
-			type: new GraphQLNonNull(GraphQLString),
+			type: new GraphQLNonNull(GraphQLID),
 			resolve: (transaction) => transaction.sender,
 		},
 		receiver: {
-			type: new GraphQLNonNull(GraphQLString),
+			type: new GraphQLNonNull(GraphQLID),
 			resolve: (transaction) => transaction.receiver,
 		},
 		createdAt: {

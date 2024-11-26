@@ -1,8 +1,6 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
-//import { redisPubSub } from '../../pubSub/redisPubSub';
-//import { PUB_SUB_EVENTS } from '../../pubSub/pubSubEvents';
-
+import { getObjectId } from '@entria/graphql-mongo-helpers';
 import { Account } from '../AccountModel';
 import { accountField } from '../AccountField';
 
@@ -25,11 +23,7 @@ const _updateAccountMutation = mutationWithClientMutationId({
 		const update = { balance: args.balance };
 		// get the modified document
 		const options = { new: true };
-		const account = await Account.findByIdAndUpdate(args.id, update, options);
-
-		//redisPubSub.publish(PUB_SUB_EVENTS.MESSAGE.ADDED, {
-		//	message: message._id.toString(),
-		//});
+		const account = await Account.findByIdAndUpdate(getObjectId(args.id), update, options).exec();
 
 		return {
 			account: account!._id.toString(),

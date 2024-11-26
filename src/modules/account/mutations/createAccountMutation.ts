@@ -1,9 +1,5 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
-
-//import { redisPubSub } from '../../pubSub/redisPubSub';
-//import { PUB_SUB_EVENTS } from '../../pubSub/pubSubEvents';
-
 import { Account } from '../AccountModel';
 import { accountField } from '../AccountField';
 
@@ -28,9 +24,6 @@ const _createAccountMutation = mutationWithClientMutationId({
 			balance: args.initialDeposit,
 		}).save();
 
-		//redisPubSub.publish(PUB_SUB_EVENTS.MESSAGE.ADDED, {
-		//	message: message._id.toString(),
-		//});
 		if (account === null || account === undefined) {
 			throw Error('could not save account\n');
 		}
