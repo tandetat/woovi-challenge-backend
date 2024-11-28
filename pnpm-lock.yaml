@@ -11,6 +11,9 @@ importers:
       '@entria/graphql-mongo-helpers':
         specifier: ^1.1.2
         version: 1.1.2(dataloader@2.2.2)(graphql-relay@0.10.2(graphql@16.9.0))(graphql@16.9.0)(mongoose@7.8.2)
+      bcryptjs:
+        specifier: ^2.4.3
+        version: 2.4.3
       dataloader:
         specifier: ^2.2.2
         version: 2.2.2
@@ -319,6 +322,9 @@ packages:
   ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
     engines: {node: '>=4'}
+
+  bcryptjs@2.4.3:
+    resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
 
   bson@5.5.1:
     resolution: {integrity: sha512-ix0EwukN2EpC0SRWIj/7B5+A6uQMQy6KMREI9qQqvgpkV2frH63T0UDVd1SYedL6dNCmDBYB3QtXi4ISk9YT+g==}
@@ -1043,6 +1049,8 @@ snapshots:
   ansi-styles@3.2.1:
     dependencies:
       color-convert: 1.9.3
+
+  bcryptjs@2.4.3: {}
 
   bson@5.5.1: {}
 

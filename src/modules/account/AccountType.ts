@@ -1,11 +1,16 @@
-import { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLList, GraphQLInputObjectType, GraphQLID } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
 import { IAccount } from './AccountModel';
 import { nodeInterface } from '../node/typeRegister';
 import { registerTypeLoader } from '../node/typeRegister';
 import { AccountLoader } from './AccountLoader';
-
+import { TransactionConnection } from '../transactions/TransactionType';
+import { TransactionLoader } from '../transactions/TransactionLoader';
+import {
+	connectionArgs,
+	withFilter,
+} from '@entria/graphql-mongo-helpers';
 const AccountType = new GraphQLObjectType<IAccount>({
 	name: 'Account',
 	description: 'Represents an account',
@@ -15,13 +20,19 @@ const AccountType = new GraphQLObjectType<IAccount>({
 			type: new GraphQLNonNull(GraphQLString),
 			resolve: (account) => account.balance,
 		},
-		name: {
-			type: new GraphQLNonNull(GraphQLString),
-			resolve: (account) => account.name,
+		receivedTransactions: {
+			type: new GraphQLList(new GraphQLNonNull(TransactionConnection.connectionType)),
+			args: {
+				...connectionArgs,
+			},
+			resolve: (account, args, context) => TransactionLoader.loadAll(context, withFilter(args, { receiver: account._id })),
 		},
-		transactions: {
-			type: new GraphQLList(new GraphQLNonNull(GraphQLString)),
-			resolve: (account) => account.transactions,
+		senderTransactions: {
+			type: new GraphQLList(new GraphQLNonNull(TransactionConnection.connectionType)),
+			args: {
+				...connectionArgs,
+			},
+			resolve: (account, args, context) => TransactionLoader.loadAll(context, withFilter(args, { sender: account._id })),
 		},
 		createdAt: {
 			type: GraphQLString,
@@ -30,13 +41,6 @@ const AccountType = new GraphQLObjectType<IAccount>({
 	}),
 	interfaces: () => [nodeInterface],
 });
-
-//const AccountInputType = new GraphQLInputObjectType({
-//	name: 'AccountInput',
-//	fields: {
-//		id: { type: new GraphQLNonNull(GraphQLID) },
-//	},
-//});
 
 registerTypeLoader(AccountType, AccountLoader.load);
 
