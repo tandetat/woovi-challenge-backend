@@ -11,10 +11,6 @@ const AccountSchema = new mongoose.Schema<IAccount>(
 			type: String,
 			description: 'The name of the account',
 		},
-		transactions: {
-			type: [String],
-			description: 'The transactions involving the account',
-		},
 	},
 	{
 		collection: 'Account',
@@ -25,7 +21,6 @@ const AccountSchema = new mongoose.Schema<IAccount>(
 export type IAccount = {
 	balance: string;
 	name: string;
-	transactions: string[];
 	createdAt: Date;
 	updatedAt: Date;
 } & Document;

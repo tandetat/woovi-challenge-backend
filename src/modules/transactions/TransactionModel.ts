@@ -1,6 +1,6 @@
 import type { Document, Model } from 'mongoose';
 import mongoose from 'mongoose';
-
+const { ObjectId } = mongoose.Schema.Types;
 const TransactionSchema = new mongoose.Schema<ITransaction>(
 	{
 		amount: {
@@ -8,11 +8,13 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
 			description: 'The amount being sent',
 		},
 		sender: {
-			type: String,
+			type: ObjectId,
+			ref: 'Account',
 			description: 'The account sending money',
 		},
 		receiver: {
-			type: String,
+			type: ObjectId,
+			ref: 'Account',
 			description: 'The account receiving the money',
 		},
 	},
@@ -24,9 +26,8 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
 
 export type ITransaction = {
 	amount: string;
-	sender: string;
-	receiver: string;
-	transactions: string[];
+	sender: mongoose.Types.ObjectId;
+	receiver: mongoose.Types.ObjectId;
 	createdAt: Date;
 	updatedAt: Date;
 } & Document;

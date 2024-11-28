@@ -21,14 +21,14 @@ const AccountType = new GraphQLObjectType<IAccount>({
 			resolve: (account) => account.balance,
 		},
 		receivedTransactions: {
-			type: new GraphQLList(new GraphQLNonNull(TransactionConnection.connectionType)),
+			type: new GraphQLNonNull(TransactionConnection.connectionType),
 			args: {
 				...connectionArgs,
 			},
 			resolve: (account, args, context) => TransactionLoader.loadAll(context, withFilter(args, { receiver: account._id })),
 		},
-		senderTransactions: {
-			type: new GraphQLList(new GraphQLNonNull(TransactionConnection.connectionType)),
+		sentTransactions: {
+			type: new GraphQLNonNull(TransactionConnection.connectionType),
 			args: {
 				...connectionArgs,
 			},
