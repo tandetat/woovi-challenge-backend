@@ -8,7 +8,7 @@ import { nodeField, nodesField } from '../modules/node/typeRegister';
 export const QueryType = new GraphQLObjectType({
 	name: 'Query',
 	fields: () => ({
-		...transactionConnectionField('getAccountTransactions'),
+		...transactionConnectionField('getTransactions'),
 		//getAccount: getAccountQuery,
 		node: nodeField,
 		nodes: nodesField,
