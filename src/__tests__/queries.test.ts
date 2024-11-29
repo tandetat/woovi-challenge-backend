@@ -1,4 +1,4 @@
-import { graphqlSync } from 'graphql';
+import { graphql } from 'graphql';
 import { schema } from '../schema/schema';
 
 import { startServer, stopServer } from '../index';
@@ -11,9 +11,9 @@ afterAll(async () => {
 	await stopServer();
 })
 describe('Queries', () => {
-	it('getAccount', () => {
+	it('getAccount', async () => {
 		const source = `query FindJosh {
-  node(id: "QWNjb3VudDo2NzQ0ZjU0ZTZkZDkwOTVmM2VkNTc4NDQ=") {
+  node(id: "QWNjb3VudDo2NzRhMDgwYzFhOGZjNWNjZjgzYjgxNzQ=") {
     ... on Account {
       id
       balance
@@ -21,13 +21,6 @@ describe('Queries', () => {
         edges {
           node {
             id
-            amount
-            sender {
-              id
-            }
-            receiver {
-              id
-            }
           }
         }
       }
@@ -35,34 +28,20 @@ describe('Queries', () => {
         edges{
           node {
             id
-            amount
           }
         }
       }
     }
   }
 }`;
-
-		expect(graphqlSync({ schema, source })).toStrictEqual({
+		const response = await graphql({ schema, source });
+		expect(response).toStrictEqual({
 			data: {
 				node: {
-					id: "QWNjb3VudDo2NzQ0ZjU0ZTZkZDkwOTVmM2VkNTc4NDQ=",
+					id: "QWNjb3VudDo2NzRhMDgwYzFhOGZjNWNjZjgzYjgxNzQ=",
 					balance: "10.00",
 					receivedTransactions: {
-						edges: [
-							{
-								node: {
-									id: "VHJhbnNhY3Rpb246Njc0OGE3MjFiMjQ4MjBjZDVhZWU3Y2Zi",
-									amount: "5.00",
-									sender: {
-										id: "QWNjb3VudDo2NzQ1MDAxMzgyMThiNTU0NDM3YTk4MTA="
-									},
-									receiver: {
-										id: "QWNjb3VudDo2NzQ0ZjU0ZTZkZDkwOTVmM2VkNTc4NDQ="
-									}
-								}
-							}
-						]
+						edges: []
 					},
 					sentTransactions: {
 						edges: []

@@ -12,14 +12,14 @@ export const startServer = async () => {
 
 	server.listen(config.PORT, () => {
 		// eslint-disable-next-line
-		console.log(`Server running on port:${config.PORT}`);
+		//console.log(`Server running on port:${config.PORT}`);
 	});
 };
 
 export const stopServer = async (): Promise<void> => {
 	if (server) {
 		await new Promise<void>((resolve) => server.close(() => resolve()));
-		console.log('Server stopped.');
+		//console.log('Server stopped.');
 	}
 };
 

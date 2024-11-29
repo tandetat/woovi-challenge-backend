@@ -3,7 +3,7 @@ import { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLBoolean } from 'graphq
 import { mutationWithClientMutationId } from 'graphql-relay';
 
 import { Transaction } from '../TransactionModel';
-
+import { getObjectId } from '@entria/graphql-mongo-helpers';
 export type deleteTransactionInput = {
 	id: string;
 };
@@ -16,11 +16,8 @@ const _deleteTransactionMutation = mutationWithClientMutationId({
 		},
 	},
 	mutateAndGetPayload: async (args: deleteTransactionInput) => {
-		const transaction = await Transaction.findByIdAndDelete(args.id);
+		const transaction = await Transaction.findByIdAndDelete(getObjectId(args.id));
 
-		//redisPubSub.publish(PUB_SUB_EVENTS.MESSAGE.ADDED, {
-		//	message: message._id.toString(),
-		//});
 		return {
 			success: transaction !== null,
 			id: transaction?._id?.toString() || '',

@@ -4,23 +4,14 @@ Based on boilerplate [Woovi Playground](https://github.com/woovibr/woovi-playgro
 
 ## Currently working parts
 
-- get Account with balance, received Transactions, and sent Transactions
-- get Transactions
-- create new Account
-- update new Account
-- create New Transaction
-
-## Is partially implemented and/or has not been tested
-
-- Delete Account or Transaction
-- Update Transaction
+- create/update/read/delete Account
+- create/update/read/delete Transaction
 
 ## Still needs to be implemented
 
-- Keep Account balance up to date based on Transactions
 - Tests
 - Deployment
-- Possibly a User type
+- Possibly a User type for login
 
 ## Design and Decisions
 

@@ -1,11 +1,11 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
-//import { redisPubSub } from '../../pubSub/redisPubSub';
-//import { PUB_SUB_EVENTS } from '../../pubSub/pubSubEvents';
 
 import { Transaction } from '../TransactionModel';
 import { transactionField } from '../TransactionFields';
+import { syncBalance } from '../../account/AcountUtils';
 
+import { getObjectId } from '@entria/graphql-mongo-helpers';
 export type updateTransactionInput = {
 	id: string;
 	amount: string;
@@ -23,13 +23,14 @@ const _updateTransactionMutation = mutationWithClientMutationId({
 	},
 	mutateAndGetPayload: async (args: updateTransactionInput) => {
 		const update = { amount: args.amount };
-		// get the modified document
-		const options = { new: true };
-		const transaction = await Transaction.findByIdAndUpdate(args.id, update, options);
+		const options = { new: false };
+		const transaction = (await Transaction.findByIdAndUpdate(getObjectId(args.id), update, options).exec())!;
 
-		//redisPubSub.publish(PUB_SUB_EVENTS.MESSAGE.ADDED, {
-		//	message: message._id.toString(),
-		//});
+		const diff: number = parseFloat(args.amount) - parseFloat(transaction.amount);
+
+		await syncBalance(transaction.sender, -diff);
+		await syncBalance(transaction.receiver, diff);
+
 
 		return {
 			transaction: transaction!._id.toString(),

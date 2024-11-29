@@ -1,26 +1,23 @@
-const babelJest = require('babel-jest');
+const babelJest = require("babel-jest");
 
 const config = {
   presets: [
     [
-      '@babel/preset-env',
+      "@babel/preset-env",
       {
         targets: {
-          node: 'current',
+          node: "current",
         },
       },
     ],
-    '@babel/preset-typescript',
+    "@babel/preset-typescript",
   ],
-  plugins: []
+  plugins: [],
 };
 
 const barrelConfig = {
   ...config,
-  plugins: [
-    ...config.plugins,
-    'transform-barrels',
-  ]
-}
+  plugins: [...config.plugins, "transform-barrels"],
+};
 
-module.exports = babelJest.createTransformer(barrelConfig);
+//module.exports = babelJest.createTransformer(barrelConfig);

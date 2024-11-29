@@ -1,11 +1,11 @@
-import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
+import { GraphQLString, GraphQLNonNull } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { Account } from '../AccountModel';
 import { accountField } from '../AccountField';
 
 export type createAccountInput = {
 	name: string;
-	initialDeposit: string;
+	balance: string;
 };
 
 const _createAccountMutation = mutationWithClientMutationId({
@@ -14,19 +14,13 @@ const _createAccountMutation = mutationWithClientMutationId({
 		name: {
 			type: new GraphQLNonNull(GraphQLString),
 		},
-		initialDeposit: {
+		balance: {
 			type: new GraphQLNonNull(GraphQLString),
 		},
 	},
 	mutateAndGetPayload: async (args: createAccountInput) => {
-		const account = await new Account({
-			name: args.name,
-			balance: args.initialDeposit,
-		}).save();
+		const account = await new Account(args).save()!;
 
-		if (account === null || account === undefined) {
-			throw Error('could not save account\n');
-		}
 		return {
 			account: account._id.toString(),
 		};

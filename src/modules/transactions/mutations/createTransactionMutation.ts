@@ -3,10 +3,8 @@ import { mutationWithClientMutationId } from 'graphql-relay';
 
 import { Transaction } from '../TransactionModel';
 import { transactionField } from '../TransactionFields';
-import { Account } from '../../account/AccountModel';
 import { getObjectId } from '@entria/graphql-mongo-helpers';
-
-import mongoose from 'mongoose';
+import { syncBalance } from '../../account/AcountUtils';
 
 export type createTransactionInput = {
 	sender: string;
@@ -27,30 +25,15 @@ const _createTransactionMutation = mutationWithClientMutationId({
 		},
 	},
 	mutateAndGetPayload: async (args: createTransactionInput) => {
+		const _sender = getObjectId(args.sender)!;
+		const _receiver = getObjectId(args.receiver)!;
 		const transaction = await new Transaction({
-			sender: getObjectId(args.sender),
-			receiver: getObjectId(args.receiver),
+			sender: _sender,
+			receiver: _receiver,
 			amount: args.amount,
-		}).save();
-		if (transaction === null || transaction === undefined) {
-			throw Error('could not save new transaction\n');
-		}
-
-		//const senderUpdate = { $push: { sentTransactions: transaction._id } };
-		//const receiverUpdate = { $push: { receivedTransactions: transaction._id } };
-		//
-		//if (!mongoose.Types.ObjectId.isValid(args.sender)) {
-		//	throw Error(`failed to convert sender.id to ObjectId ${args.sender}`);
-		//}
-		//const senderId = getObjectId(args.sender);
-		//
-		//if (!mongoose.Types.ObjectId.isValid((args.receiver))) {
-		//	throw Error(`failed to convert receiver.id to ObjectId ${args.receiver}`);
-		//}
-		//const receiverId = getObjectId(args.receiver);
-		//
-		//await Account.findByIdAndUpdate(senderId, senderUpdate).exec();
-		//await Account.findByIdAndUpdate(receiverId, receiverUpdate).exec();
+		}).save()!;
+		await syncBalance(_sender, -parseFloat(args.amount));
+		await syncBalance(_receiver, parseFloat(args.amount));
 
 		return {
 			transaction: transaction._id.toString(),
