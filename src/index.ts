@@ -2,7 +2,7 @@ import http from 'http';
 
 import { app } from './server/app';
 import { config } from './config';
-import { connectDatabase } from './database';
+import { connectDatabase, disconnectDatabase } from './database';
 
 let server: http.Server;
 export const startServer = async () => {
@@ -19,8 +19,10 @@ export const startServer = async () => {
 export const stopServer = async (): Promise<void> => {
 	if (server) {
 		await new Promise<void>((resolve) => server.close(() => resolve()));
+
 		//console.log('Server stopped.');
 	}
+	await disconnectDatabase();
 };
 
 startServer();

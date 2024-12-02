@@ -11,4 +11,7 @@ async function connectDatabase() {
 	await mongoose.connect(config.MONGO_URI);
 }
 
-export { connectDatabase };
+async function disconnectDatabase() {
+	await mongoose.disconnect();
+}
+export { connectDatabase, disconnectDatabase };

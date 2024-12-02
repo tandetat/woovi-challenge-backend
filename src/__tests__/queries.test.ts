@@ -1,8 +1,7 @@
-import { graphql } from 'graphql';
 import { schema } from '../schema/schema';
-
 import { startServer, stopServer } from '../index';
-
+import { app } from '../server/app';
+import request from 'supertest';
 beforeAll(async () => {
 	await startServer();
 })
@@ -12,7 +11,7 @@ afterAll(async () => {
 })
 describe('Queries', () => {
 	it('getAccount', async () => {
-		const source = `query FindJosh {
+		const query = `query FindJosh {
   node(id: "QWNjb3VudDo2NzRhMDgwYzFhOGZjNWNjZjgzYjgxNzQ=") {
     ... on Account {
       id
@@ -34,8 +33,10 @@ describe('Queries', () => {
     }
   }
 }`;
-		const response = await graphql({ schema, source });
-		expect(response).toStrictEqual({
+		const response = await request(app.callback())
+			.post('/graphql')
+			.send({ query: query });
+		expect(response.body).toStrictEqual({
 			data: {
 				node: {
 					id: "QWNjb3VudDo2NzRhMDgwYzFhOGZjNWNjZjgzYjgxNzQ=",
