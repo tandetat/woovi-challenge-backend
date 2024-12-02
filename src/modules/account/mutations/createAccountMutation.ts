@@ -4,7 +4,7 @@ import { Account } from '../AccountModel';
 import { accountField } from '../AccountField';
 
 export type createAccountInput = {
-	name: string;
+	name: string | null;
 	balance: string;
 };
 
@@ -12,7 +12,7 @@ const _createAccountMutation = mutationWithClientMutationId({
 	name: 'createAccount',
 	inputFields: {
 		name: {
-			type: new GraphQLNonNull(GraphQLString),
+			type: GraphQLString,
 		},
 		balance: {
 			type: new GraphQLNonNull(GraphQLString),

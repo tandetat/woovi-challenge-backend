@@ -18,11 +18,10 @@ export const startServer = async () => {
 
 export const stopServer = async (): Promise<void> => {
 	if (server) {
-		await new Promise<void>((resolve) => server.close(() => resolve()));
-
-		//console.log('Server stopped.');
+		await new Promise<void>(() => server.close());
 	}
 	await disconnectDatabase();
 };
-
-startServer();
+if (require.main === module) {
+	startServer();
+}

@@ -20,6 +20,11 @@ const AccountType = new GraphQLObjectType<IAccount>({
 			type: new GraphQLNonNull(GraphQLString),
 			resolve: (account) => account.balance,
 		},
+		name: {
+			type: GraphQLString,
+			resolve: (account) => account.name,
+
+		},
 		receivedTransactions: {
 			type: new GraphQLNonNull(TransactionConnection.connectionType),
 			args: {

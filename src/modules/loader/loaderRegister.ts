@@ -1,7 +1,7 @@
 export interface DataLoaders {
 	AccountLoader: ReturnType<typeof import('../account/AccountLoader').AccountLoader.getLoader>;
 	TransactionLoader: ReturnType<typeof import('../transactions/TransactionLoader').TransactionLoader.getLoader>;
-	UserLoader: ReturnType<typeof import('../user/UserLoader').UserLoader.getLoader>;
+	//UserLoader: ReturnType<typeof import('../user/UserLoader').UserLoader.getLoader>;
 }
 
 const loaders: {

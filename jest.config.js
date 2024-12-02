@@ -19,6 +19,7 @@ const jestTransformer = () => {
 module.exports = {
   testPathIgnorePatterns: ["/node_modules/", "./dist"],
   resetModules: false,
+  testTimeout: 5000,
   //transform: {
   //  //...jestTransformer(),
   //  "^.+\\.(js|ts|tsx)?$": "./babelBarrel.js",
