@@ -2,13 +2,15 @@ import { startServer, stopServer } from '../index';
 import { app } from '../server/app';
 import request from 'supertest';
 import { toGlobalId } from 'graphql-relay';
-import { populateTestDatabase, mockAccountIds, mockTransactionIds, transactionAmounts, MOCK_ACCOUNTS, total } from './test_utils';
+import { populateTestDatabase, mockAccountIds, mockTransactionIds, transactionAmounts, MOCK_ACCOUNTS, total } from './utils';
+import { clearTestDatabase } from '../database';
 beforeAll(async () => {
 	await startServer();
 	await populateTestDatabase();
 })
 
 afterAll(async () => {
+	await clearTestDatabase();
 	await stopServer();
 })
 describe('Queries', () => {
@@ -27,7 +29,7 @@ describe('Queries', () => {
           }
         }
       }
-      sentTransactions (last: 1) {
+      sentTransactions (first: 1) {
         edges{
           node {
             id

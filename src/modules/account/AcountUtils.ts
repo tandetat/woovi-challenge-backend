@@ -1,4 +1,3 @@
-import { getObjectId } from "@entria/graphql-mongo-helpers";
 import { Account } from "./AccountModel";
 import { Types } from "mongoose";
 export async function syncBalance(id: Types.ObjectId, amount: number): Promise<void> {
