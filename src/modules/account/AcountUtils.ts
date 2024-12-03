@@ -10,5 +10,6 @@ export async function syncBalance(id: Types.ObjectId, amount: number): Promise<v
 	if (await Account.findByIdAndUpdate(id, update).exec() === null) {
 		return Promise.reject(Error(`Error: failed to update balance for account ${id}`));
 	}
+
 	return Promise.resolve();
 }

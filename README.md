@@ -1,6 +1,6 @@
 # Woovi Challenge: Bank CRUD Backend
 
-Based on boilerplate [Woovi Playground](https://github.com/woovibr/woovi-playground) and [Relay Workshop](https://github.com/sibelius/relay-workshop).
+Based on code from [Woovi Playground](https://github.com/woovibr/woovi-playground) and [Relay Workshop](https://github.com/sibelius/relay-workshop).
 
 ## Currently working parts
 
@@ -9,7 +9,6 @@ Based on boilerplate [Woovi Playground](https://github.com/woovibr/woovi-playgro
 
 ## Still needs to be implemented
 
-- Tests
 - Deployment
 - Possibly a User type for login
 
@@ -17,7 +16,8 @@ Based on boilerplate [Woovi Playground](https://github.com/woovibr/woovi-playgro
 
 We must implement a backend that replicates a bank, where you can send and receive a transaction, and calculate the available balance of an account. 
 
-We have two related entities, Account and Transaction, and we must make considerations about them.
+We have two related entities, Account and Transaction, where an Account has an available balance and can send and receive Transactions.
+Transactions send an amount from one Account, the sender, to another, the receiver.
 
 An Account must be able to send and receive transactions, and we must be able to calculate its available balance. A Transaction must inform to which Account it is being sent to and which Account sent it, and also inform the amount being traded.
 
