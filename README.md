@@ -11,6 +11,7 @@ Based on code from [Woovi Playground](https://github.com/woovibr/woovi-playgroun
 
 - Deployment
 - Possibly a User type for login
+- Add extra mock Account and Transactions for updateAccount, updateTransaction, and deleteTransaction.
 
 ## Design and Decisions
 

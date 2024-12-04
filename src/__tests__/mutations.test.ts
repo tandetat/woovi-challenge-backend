@@ -5,7 +5,7 @@ import { toGlobalId } from 'graphql-relay';
 import { populateTestDatabase, mockAccountIds, mockTransactionIds, transactionAmounts, MOCK_ACCOUNTS } from './utils';
 import { Account } from '../modules/account/AccountModel';
 import { getObjectId } from '@entria/graphql-mongo-helpers';
-import { AccountLoader } from '../modules/account/AccountLoader';
+import { Transaction } from '../modules/transactions/TransactionModel';
 beforeAll(async () => {
 	await startServer();
 	await populateTestDatabase();
@@ -35,18 +35,19 @@ createAccount(
 			.send({ mutation: createAccount });
 		expect(response.status).toBe(200);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
-		expect(response.body.data.balance).toStrictEqual(
+		expect(response.body.data.account.balance).toStrictEqual(
 			newBalance
 		);
-		expect(response.body.data.name).toStrictEqual(name);
-		const id = response.body.data.id;
+		expect(response.body.data.account.name).toStrictEqual(name);
+		const id = response.body.data.account.id;
 		const newAccDb = await Account.findById(getObjectId(id)).exec();
 		expect(newAccDb?.balance).toStrictEqual(newBalance);
 		expect(newAccDb?.name).toStrictEqual(name);
 		expect(newAccDb?.id).toStrictEqual(getObjectId(id));
 	});
 	it('updateAccount', async () => {
-		const deleteId = toGlobalId('Account', mockAccountIds[2]);
+		const _delId = mockAccountIds[2];
+		const deleteId = toGlobalId('Account', _delId);
 		const newBalance = "20.00";
 		const updateDelete1 = `mutation updateDelete1{
 updateAccount(
@@ -65,12 +66,14 @@ updateAccount(
 		expect(response.status).toBe(200);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 		expect(response.body.data).toStrictEqual({
-			id: deleteId,
-			balance: newBalance,
+			account: {
+				id: deleteId,
+				balance: newBalance,
+			}
 		});
-		const updatedAcc = await Account.findById(getObjectId(deleteId)).exec();
+		const updatedAcc = await Account.findById(_delId).exec();
 		expect(updatedAcc?.balance).toStrictEqual(newBalance);
-		expect(updatedAcc?.id).toStrictEqual(getObjectId(deleteId));
+		expect(updatedAcc?.id).toStrictEqual(_delId);
 
 	});
 	it('deleteAccount', async () => {
@@ -93,44 +96,78 @@ deleteAccount(
 		});
 		const deletedAcc = await Account.findById(getObjectId(deleteId)).exec();
 		expect(deletedAcc).toBeNull();
-	})
-	it('getTransaction', async () => {
-		const transactionId = toGlobalId('Transaction', mockTransactionId);
-		const senderId = toGlobalId('Account', mockAccountIds[0]);
-		const receiverId = toGlobalId('Account', mockAccountIds[1]);
-		const findTransaction1 = `query FindTransaction1{
-  node(id: "${transactionId}") {
-    ... on Transaction{
+	});
+	it('createTransaction', async () => {
+		const _sender = mockAccountIds[0];
+		const _receiver = mockAccountIds[1];
+		const senderId = toGlobalId('Account', _sender);
+		const receiverId = toGlobalId('Account', _receiver);
+		const amount = "1.00";
+		const createTransaction = `mutation createTransaction{
+createTransaction(
+    input: {sender: "${senderId}", receiver: "${receiverId}", amount: "${amount}"}
+  ) {
+    transaction {
       id
-      amount 
       sender {
         id
-        name
       }
       receiver {
         id
-        name
       }
+      amount
+    }
   }
- }
-}`;
+  }`;
 		const response = await request(app.callback())
 			.post('/graphql')
 			.set('Content-Type', 'application/json')
-			.send({ query: findTransaction1 });
+			.send({ mutation: createTransaction });
+		expect(response.status).toBe(200);
+		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
+		expect(response.body.data.transaction.sender.id).toStrictEqual(senderId);
+		expect(response.body.data.transaction.receiver.id).toStrictEqual(receiverId);
+		expect(response.body.data.transaction.amount).toStrictEqual(amount);
+
+		const id = response.body.data.transaction.id;
+		const newTransaction = await Transaction.findById(getObjectId(id)).exec();
+		expect(newTransaction?.amount).toStrictEqual(amount);
+		expect(newTransaction?.sender).toStrictEqual(_sender);
+		expect(newTransaction?.receiver).toStrictEqual(_receiver);
+
+	});
+	it('updateTransaction', async () => {
+		const _id = mockTransactionIds[0]
+		const updateId = toGlobalId('Account', _id);
+		const amount = "0.70";
+		const updateTransaction = `mutation updateTransaction{
+updateteTransaction(
+    input: {id: "${updateId}", amount: "${amount}"}
+  ) {
+    transaction {
+      id
+      amount
+    }
+  }
+  }`;
+		const response = await request(app.callback())
+			.post('/graphql')
+			.set('Content-Type', 'application/json')
+			.send({ mutation: updateTransaction });
 		expect(response.status).toBe(200);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 		expect(response.body.data).toStrictEqual({
-			node: {
-				id: transactionId,
-				amount: transactionAmount,
-				sender: { id: senderId, name: 'Sender 1' },
-
-				receiver: { id: receiverId, name: 'Receiver 1' },
+			transaction: {
+				id: updateId,
+				amount: amount,
 			}
-
 		});
-	});
+		const updatedTransaction = await Transaction.findById(getObjectId(updateId)).exec();
+		expect(newTransaction?.amount).toStrictEqual(amount);
+		expect(newTransaction?.sender).toStrictEqual(getObjectId(senderId));
+		expect(newTransaction?.receiver).toStrictEqual(getObjectId(receiverId));
+
+	})
 
 });
 
