@@ -12,9 +12,6 @@ dotenvSafe.config({
 });
 
 const ENV = process.env;
-
-
-
 const prodConfig = {
 	PORT: ENV.PORT ?? 4000,
 	MONGO_URI: ENV.MONGO_URI ?? '',

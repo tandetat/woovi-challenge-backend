@@ -6,6 +6,7 @@ import { populateTestDatabase, mockAccountIds, mockTransactionIds, transactionAm
 import { clearTestDatabase } from '../database';
 beforeAll(async () => {
 	await startServer();
+	await clearTestDatabase();
 	await populateTestDatabase();
 })
 
@@ -29,7 +30,7 @@ describe('Queries', () => {
           }
         }
       }
-      sentTransactions (first: 1) {
+      sentTransactions (last: 1) {
         edges{
           node {
             id
@@ -108,7 +109,7 @@ describe('Queries', () => {
 		const receiverId = toGlobalId('Account', mockAccountIds[1]);
 		const transactionIds = mockTransactionIds.map((id) => toGlobalId('Transaction', id));
 		const findTransactions = `query getTransactions {
-  getTransactions(first: 2) {
+  getTransactions(last: 2) {
     edges {
       node {
         id
@@ -129,21 +130,21 @@ describe('Queries', () => {
 			.send({ query: findTransactions });
 		expect(response.status).toBe(200);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
-		expect(response.body.data).toStrictEqual({
+		expect(response.body.data).toEqual({
 			edges: [
 				{
 					node: {
 
-						id: transactionIds[0],
-						amount: transactionAmounts[0].toFixed(2),
+						id: transactionIds[1],
+						amount: transactionAmounts[1].toFixed(2),
 						sender: { id: senderId },
 
 						receiver: { id: receiverId },
 					}
 				}, {
 					node: {
-						id: transactionIds[1],
-						amount: transactionAmounts[1].toFixed(2),
+						id: transactionIds[0],
+						amount: transactionAmounts[0].toFixed(2),
 						sender: { id: senderId },
 
 						receiver: { id: receiverId },

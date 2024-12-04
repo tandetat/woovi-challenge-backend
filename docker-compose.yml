@@ -1,13 +1,22 @@
 version: '3.8'
 
 services:
-  mongodb:
+  mongodb-prod:
     image: mongo
-    container_name: mongodb
+    container_name: mongodb_prod
     ports:
       - "27017:27017"
     environment:
       - MONGO_INITDB_DATABASE=woovi-challenge-backend
+    restart: always
+
+  mongodb-test:
+    image: mongo
+    container_name: mongodb_test
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=test-woovi-challenge-backend
     restart: always
 
   redis:

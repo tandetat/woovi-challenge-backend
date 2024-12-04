@@ -18,9 +18,13 @@ async function disconnectDatabase() {
 	await mongoose.disconnect();
 }
 async function clearTestDatabase() {
+	console.log(config.TEST);
 	if (config.TEST) {
-		Account.collection.drop();
-		Transaction.collection.drop();
+		const ac = await Account.collection.drop();
+		const tr = await Transaction.collection.drop();
+
+		if (!ac) { throw new Error('Failed to drop Accounts collection') }
+		if (!tr) { throw new Error('Failed to drop Transactions collection') }
 	} else {
 		throw new Error('Attempted to wipe prod database.');
 	}
