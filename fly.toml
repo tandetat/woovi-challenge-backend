@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for woovi-challenge-backend on 2024-12-05T16:58:34-03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'woovi-challenge-backend'
+primary_region = 'gig'
+
+[build]
+
+[env]
+  PORT = '4000'
+  MONGO_URI='mongodb://localhost/woovi-challenge-backend'
+
+[http_service]
+  internal_port = 4000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
