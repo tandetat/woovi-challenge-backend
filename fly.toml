@@ -10,7 +10,11 @@ primary_region = 'gig'
 
 [env]
   PORT = '4000'
-  MONGO_URI='mongodb://localhost/woovi-challenge-backend'
+  MONGO_URI='mongodb://mongodb-app-small-fire-2092.internal:27017'
+
+[[mounts]]
+  source = "mongodb_data"
+  destination = "/data/db"
 
 [http_service]
   internal_port = 4000

@@ -27,8 +27,6 @@ RUN npm install -g @pnpm/exe
 COPY --link package.json .
 RUN pnpm install --production=false
 
-RUN pnpm compose:up
-
 # Copy application code
 COPY --link . .
 
