@@ -4,6 +4,7 @@ import { mutationWithClientMutationId } from 'graphql-relay';
 
 import { Account } from '../AccountModel';
 import { getObjectId } from '@entria/graphql-mongo-helpers';
+import { deleteAccountTransactions } from '../AcountUtils';
 export type deleteAccountInput = {
 	id: string;
 };
@@ -17,7 +18,7 @@ const _deleteAccountMutation = mutationWithClientMutationId({
 	},
 	mutateAndGetPayload: async (args: deleteAccountInput) => {
 		const account = await Account.findByIdAndDelete(getObjectId(args.id)).exec();
-
+		await deleteAccountTransactions(account?._id);
 		return {
 			success: account !== null,
 			id: account?._id?.toString() || '',

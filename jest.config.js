@@ -24,7 +24,7 @@ module.exports = {
   //  //...jestTransformer(),
   //  "^.+\\.(js|ts|tsx)?$": "./babelBarrel.js",
   //},
-  testRegex: "(/__tests__/.*(test|spec)).(js|ts|tsx)?$",
+  testRegex: "(/__tests__/.*(tests)).(js|ts|tsx)?$",
   moduleFileExtensions: ["ts", "js", "tsx", "json"],
   testEnvironment: "node",
 };

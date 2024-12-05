@@ -32,8 +32,9 @@ const _createTransactionMutation = mutationWithClientMutationId({
 			receiver: _receiver,
 			amount: args.amount,
 		}).save()!;
-		await syncBalance(_sender, -parseFloat(args.amount));
-		await syncBalance(_receiver, parseFloat(args.amount));
+		const parsedAmount = parseFloat(args.amount);
+		await syncBalance(_sender, -parsedAmount);
+		await syncBalance(_receiver, parsedAmount);
 
 		return {
 			transaction: transaction._id.toString(),

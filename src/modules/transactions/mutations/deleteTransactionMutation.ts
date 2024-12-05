@@ -4,6 +4,7 @@ import { mutationWithClientMutationId } from 'graphql-relay';
 
 import { Transaction } from '../TransactionModel';
 import { getObjectId } from '@entria/graphql-mongo-helpers';
+import { syncBalance } from '../../account/AcountUtils';
 export type deleteTransactionInput = {
 	id: string;
 };
@@ -16,8 +17,13 @@ const _deleteTransactionMutation = mutationWithClientMutationId({
 		},
 	},
 	mutateAndGetPayload: async (args: deleteTransactionInput) => {
-		const transaction = await Transaction.findByIdAndDelete(getObjectId(args.id));
+		const transaction = await Transaction.findByIdAndDelete(getObjectId(args.id)).exec();
 
+		if (transaction !== null) {
+			const parsedAmount = parseFloat(transaction.amount);
+			await syncBalance(transaction.sender, parsedAmount);
+			await syncBalance(transaction.receiver, -parsedAmount);
+		}
 		return {
 			success: transaction !== null,
 			id: transaction?._id?.toString() || '',
